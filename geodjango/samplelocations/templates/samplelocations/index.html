@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sample Locations Table</title>
-</head>
-<body>
+{% extends "samplelocations/base.html" %}
+
+{% block title %}Sample Locations Table{% endblock %}
+
+{% block content %}
     <h1>Sample Locations</h1>
     <table border="1" cellpadding="10" cellspacing="0">
         <tr>
@@ -23,10 +22,9 @@
         </tr>
         {% endfor %}
     </table>
-</body>
-</html>
-{% if locations %}
-    <p>Total locations: {{ locations|length }}</p>
-{% else %}
-    <p>No locations found.</p>
-{% endif %}
+    {% if locations %}
+        <p>Total locations: {{ locations|length }}</p>
+    {% else %}
+        <p>No locations found.</p>
+    {% endif %}
+{% endblock %}
