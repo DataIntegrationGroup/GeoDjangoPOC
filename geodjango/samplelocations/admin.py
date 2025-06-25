@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import SampleLocation, Owner, Contact
 
-# Register your models here.
+admin.site.register(SampleLocation)
+admin.site.register(Owner)
+admin.site.register(Contact)
