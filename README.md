@@ -93,6 +93,9 @@ python manage.py runserver
 - **Home Page (Sample Locations Table as of now):**  
   [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
+- **API Docs:**
+ [http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/)
+
 - **Sample Locations API Endpoint Example:**  
   [http://127.0.0.1:8000/api/samplelocations/](http://127.0.0.1:8000/api/samplelocations/)
 
