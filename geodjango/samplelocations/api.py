@@ -3,7 +3,7 @@ from .models import SampleLocation
 
 router = Router()
 
-@router.get('/samplelocations')
+@router.get('')
 def list_samplelocations(request):
     """
     List all sample locations.

@@ -15,10 +15,6 @@ cd GeoDjangoPOC
 
 **Install [uv](https://github.com/astral-sh/uv) if you haven’t already:**
 
-```sh
-curl -Ls https://astral.sh/uv/install.sh | sh
-```
-
 **Create and sync your Python environment (this will create `.venv` automatically if needed):**
 
 ```sh
