@@ -2,10 +2,9 @@
 
 ## Getting Started (Development)
 
-### 1. Clone the Repository
+### 1. Clone the Repository and cd into root
 
 ```sh
-git clone <your-repo-url>
 cd GeoDjangoPOC
 ```
 
@@ -26,7 +25,7 @@ This reads from `pyproject.toml` and installs all required dependencies into a l
 **To activate the environment:**
 
 ```sh
-source .venv/bin/activate
+source .venv/bin/activate #unix/linux - may be different on your machine
 ```
 
 ---
@@ -47,9 +46,7 @@ This will be used by docker-compose and settings.py
 
 ### 4. Start the PostGIS Database with Docker Compose
 
-Ensure Docker Desktop is running.
-
-Then spin up the database container:
+Ensure Docker Desktop is running, then spin up the database container:
 
 ```sh
 docker compose up -d
@@ -97,7 +94,7 @@ python manage.py runserver
   [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 - **Sample Locations API Endpoint Example:**  
-  [http://127.0.0.1:8000/api/samplelocations/samplelocations](http://127.0.0.1:8000/api/samplelocations/samplelocations)
+  [http://127.0.0.1:8000/api/samplelocations/](http://127.0.0.1:8000/api/samplelocations/)
 
 ---
 
@@ -113,7 +110,7 @@ docker compose down
 
 ## Notes
 
-- `uv sync` automatically creates a `.venv` and installs dependencies from `pyproject.toml`.
+- `uv sync` automatically creates a `.venv` and installs dependencies from `pyproject.toml`, but you probably have to activate the .venv and point your editor's python interpreter to it.
 - Make sure your `.env` DB credentials match your `docker-compose.yml` and Django settings.
 - You must have Docker Desktop running before using `docker compose`.
 - PostgreSQL must be running before Django can connect to it.
