@@ -65,6 +65,11 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
+If you'd like to seed the DB with 8 dummy wells and 2 dummy springs, run:
+
+```sh
+python manage.py seed_samplelocations
+```
 ---
 
 ### 6. Create a Superuser for Admin Access
