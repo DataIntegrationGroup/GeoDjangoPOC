@@ -15,9 +15,9 @@ cd GeoDjangoPOC
 Create a `.env` file in the project root (same directory as `docker-compose.yml`) and define your dev db/creds:
 
 ```ini
-DB_NAME=geodjango_db
-DB_USER=geouser
-DB_PASSWORD=geopassword
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
 ```
 
 ---
