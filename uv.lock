@@ -48,12 +48,25 @@ wheels = [
 ]
 
 [[package]]
+name = "django-unfold"
+version = "0.61.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/21/c5/b4f0231b76ac363c84c0c006a37d3c7c86709e1ce7b2a05d3c28a6030931/django_unfold-0.61.0.tar.gz", hash = "sha256:97e6d68600f8c9fbf4e3cf64bcc81c93dd4627150541e0e077e72f112a3a31a2", size = 1064069, upload-time = "2025-06-30T13:30:45.228Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b4/58/38c0a0249e621b5477afbaa386ff2bb50d42cc3de5e439ea3104f1759754/django_unfold-0.61.0-py3-none-any.whl", hash = "sha256:c1314094b6cb003491d551b854012abea774f1e35d58b930a9d8d354172d21d0", size = 1170810, upload-time = "2025-06-30T13:30:43.975Z" },
+]
+
+[[package]]
 name = "geodjangopoc"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "django" },
     { name = "django-ninja" },
+    { name = "django-unfold" },
     { name = "psycopg2-binary" },
     { name = "python-dotenv" },
 ]
@@ -62,6 +75,7 @@ dependencies = [
 requires-dist = [
     { name = "django", specifier = ">=5.2.3" },
     { name = "django-ninja", specifier = ">=1.4.3" },
+    { name = "django-unfold", specifier = ">=0.61.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
 ]
