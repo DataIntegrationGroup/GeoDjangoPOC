@@ -10,117 +10,81 @@ cd GeoDjangoPOC
 
 ---
 
-### 2. Set Up Your Python Environment
-
-**Install [uv](https://github.com/astral-sh/uv) if you haven’t already:**
-
-**Create and sync your Python environment (this will create `.venv` automatically if needed):**
-
-```sh
-uv sync
-```
-
-This reads from `pyproject.toml` and installs all required dependencies into a local `.venv`.
-
-**To activate the environment:**
-
-```sh
-source .venv/bin/activate #unix/linux - may be different on your machine
-```
-
----
-
-### 3. Create and Configure Your `.env` File
+### 2. Create and Configure Your `.env` File
 
 Create a `.env` file in the project root (same directory as `docker-compose.yml`) and define your dev db/creds:
 
 ```ini
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-```
-
-This will be used by docker-compose and settings.py
-
----
-
-### 4. Start the PostGIS Database with Docker Compose
-
-Ensure Docker Desktop is running, then spin up the database container:
-
-```sh
-docker compose up -d
-```
-
-This launches a PostgreSQL/PostGIS database on `localhost:5432` using the credentials from your `.env`.
-
----
-
-### 5. Run Django Migrations
-
-With your virtual environment activated and dev db container running:
-
-```sh
-python manage.py makemigrations
-python manage.py migrate
-```
-
-If you'd like to seed the DB with 8 dummy wells and 2 dummy springs, run:
-
-```sh
-python manage.py seed_samplelocations
-```
----
-
-### 6. Create a Superuser for Admin Access
-
-```sh
-python manage.py createsuperuser
-```
-
-Follow the prompts to configure your admin account.
-
----
-
-### 7. Run the Development Server
-
-```sh
-python manage.py runserver
+DB_NAME=geodjango_db
+DB_USER=geouser
+DB_PASSWORD=geopassword
 ```
 
 ---
 
-### 8. Access the Application
+### 3. Build and Start the Dockerized App
+
+Make sure Docker Desktop is running, then build and start the containers in detached mode:
+
+```sh
+docker compose up -d --build
+```
+
+This launches both the PostGIS database and the Django app.
+
+---
+
+### 4. Run Django Management Commands
+
+To run Django management commands inside the running container, for example use:
+
+```sh
+docker compose exec web python manage.py makemigrations
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py createsuperuser
+docker compose exec web python manage.py seed_samplelocations
+```
+
+You can replace `makemigrations`, `migrate`, etc. with any Django command as needed.
+
+---
+
+### 5. Access the Application
 
 - **Admin Portal:**  
-  [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+  [http://localhost:8000/admin/](http://localhost:8000/admin/)
 
-- **Home Page (Sample Locations Table as of now):**  
-  [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+- **Home Page:**  
+  [http://localhost:8000/](http://localhost:8000/)
 
-- **API Docs:**
- [http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/)
+- **API Docs:**  
+  [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
 
 - **Sample Locations API Endpoint Example:**  
-  [http://127.0.0.1:8000/api/samplelocations/](http://127.0.0.1:8000/api/samplelocations/)
+  [http://localhost:8000/api/samplelocations/](http://localhost:8000/api/samplelocations/)
 
 ---
 
-### 9. Stopping the Database
+### 6. Stopping the App and Database
 
-To shut down the PostGIS container:
+To shut down all containers:
 
 ```sh
 docker compose down
+```
+
+To also remove volumes (for a clean slate - this will delete your db storage):
+
+```sh
+docker compose down -v
 ```
 
 ---
 
 ## Notes
 
-- `uv sync` automatically creates a `.venv` and installs dependencies from `pyproject.toml`, but you probably have to activate the .venv and point your editor's python interpreter to it.
+- You do **not** need to install Python, GDAL, or PostGIS locally—**everything runs in Docker**.
+- All Django/Python commands should be run using `docker compose exec web python manage.py ...`.
 - Make sure your `.env` DB credentials match your `docker-compose.yml` and Django settings.
-- You must have Docker Desktop running before using `docker compose`.
-- PostgreSQL must be running before Django can connect to it.
-
----
+- Docker Desktop must be running before using `docker compose`.
+- The database service must be healthy before Django can connect.
