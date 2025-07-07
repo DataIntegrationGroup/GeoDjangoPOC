@@ -10,9 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import io
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 import os
+
+from google.cloud import secretmanager
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +26,18 @@ local_env_path = PARENT_DIR / '.env'
 if local_env_path.exists():
     load_dotenv(local_env_path)
 
-elif os.getenv('GOOGLE_CLOUD_PROJECT'):
+elif os.environ.get('GOOGLE_CLOUD_PROJECT', None):
     # app engine environment
-    pass
+    project_id = os.environ.get('GOOGLE_CLOUD_PROJECT')
+    client = secretmanager.SecretManagerServiceClient()
+    settings_name = os.environ.get('SETTINGS_NAME', 'geodjango_settings')
+    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
+    payload = client.access_secret_version(name=name).payload.data.decode('UTF-8')
+
+    os.environ.update(dotenv_values(stream=io.StringIO(payload)))
+
+else:
+    raise Exception("No .env file found and GOOGLE_CLOUD_PROJECT is not set.")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
