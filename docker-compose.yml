@@ -1,12 +1,14 @@
 services:
   db:
-    image: postgis/postgis:16-3.4
-    container_name: geodjango_postgis
+    image: timescale/timescaledb-ha:pg17-all
+    container_name: geodjango_postgis_timescale
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+      TIMESCALEDB_TELEMETRY: off
     ports:
       - "5432:5432"
     volumes:
