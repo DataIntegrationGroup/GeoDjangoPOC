@@ -9,7 +9,6 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
 
       TIMESCALEDB_TELEMETRY: off
-      ALLOW_NOSSL: "true" # for local dev
     ports:
       - "5432:5432"
     volumes:
