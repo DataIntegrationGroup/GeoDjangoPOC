@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import io
 from pathlib import Path
+from urllib.parse import urlparse
 from dotenv import load_dotenv, dotenv_values
 import os
 
@@ -48,8 +49,18 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
-
+#App engine url settings
+APPENGINE_URL = os.environ.get('APPENGINE_URL', default=None)
+if APPENGINE_URL:
+    if not urlparse(APPENGINE_URL).scheme:
+        APPENGINE_URL = f"https://{APPENGINE_URL}"
+    
+    ALLOWED_HOSTS = [urlparse(APPENGINE_URL).netloc]
+    CSRF_TRUSTED_ORIGINS = [APPENGINE_URL]
+    SECURE_SSL_REDIRECT = True
+else:
+    # Local development settings
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
