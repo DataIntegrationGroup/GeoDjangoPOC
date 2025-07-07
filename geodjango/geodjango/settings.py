@@ -17,7 +17,8 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-local_env_path = BASE_DIR / '.env'
+PARENT_DIR = BASE_DIR.parent
+local_env_path = PARENT_DIR / '.env'
 
 if local_env_path.exists():
     load_dotenv(local_env_path)
