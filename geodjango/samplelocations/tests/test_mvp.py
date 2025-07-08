@@ -18,7 +18,7 @@ class TestLocations(BaseTestClass):
 
     def test_get_locations(self):
         response = self.client.get("/api/locations")
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
 
     def test_post_location(self):
         location = {
@@ -27,15 +27,15 @@ class TestLocations(BaseTestClass):
             "visible": True,
         }
         response = self.client.post("/api/locations", json=location)
-        assert response.status_code == 200
-        assert response.json()["id"] is not None
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response.json()["id"])
 
 
 class TestWells(BaseTestClass):
 
     def test_get_wells(self):
         response = self.client.get("/api/wells")
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
 
     def test_post_well(self):
         well = {
@@ -52,8 +52,8 @@ class TestWells(BaseTestClass):
             "construction_notes": "this is a test of notes",
         }
         response = self.client.post("/api/wells", json=well)
-        assert response.status_code == 200
-        assert response.json()["id"] is not None
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response.json()["id"])
 
 
     def test_post_well_screen(self):
@@ -64,8 +64,8 @@ class TestWells(BaseTestClass):
             "screen_type": "PVC",
         }
         response = self.client.post("/api/wells/well-screens/", json=well_screen)
-        assert response.status_code == 200
-        assert response.json()["id"] is not None
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response.json()["id"])
 
 
 class TestContacts(BaseTestClass):
@@ -77,8 +77,8 @@ class TestContacts(BaseTestClass):
             "email": "foo@gmail.com",
         }
         response = self.client.post("/api/wells/contacts/", json=contact)
-        assert response.status_code == 200
-        assert response.json()["id"] is not None
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response.json()["id"])
 
 # #  ============== optional ? =============
 # def test_add_lexicon():
