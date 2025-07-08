@@ -28,7 +28,7 @@ npm-debug.log
 *.env
 
 # Docker
-Dockerfile
+Dockerfile.dev
 docker-compose.yml
 docker-compose.yaml
 
