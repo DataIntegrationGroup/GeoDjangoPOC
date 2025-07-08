@@ -1,0 +1,52 @@
+# Python cache and virtualenv
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+env/
+venv/
+.venv/
+ENV/
+.Python
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Node/npm
+node_modules/
+npm-debug.log
+
+# Local environment and secrets
+.env
+*.env
+
+# Docker
+Dockerfile
+docker-compose.yml
+docker-compose.yaml
+
+# Test and coverage
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+tests/
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+
+# Static/media (if not needed)
+staticfiles/
+media/
+
+# Misc
+*.log
