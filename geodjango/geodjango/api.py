@@ -1,6 +1,6 @@
-from ninja import NinjaAPI
+from ninja import NinjaAPI, Redoc
 
-api = NinjaAPI()
+api = NinjaAPI(docs=Redoc())
 
 api.add_router('/locations', 'samplelocations.api.locations.router')
 api.add_router('/wells', 'samplelocations.api.wells.router')
