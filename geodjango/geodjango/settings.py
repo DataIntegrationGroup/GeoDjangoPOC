@@ -10,27 +10,58 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import io
 from pathlib import Path
-from dotenv import load_dotenv
+from urllib.parse import urlparse
+from dotenv import load_dotenv, dotenv_values
 import os
-# Load environment variables from .env file
-load_dotenv()
+
+from google.cloud import secretmanager
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+PARENT_DIR = BASE_DIR.parent
+local_env_path = PARENT_DIR / '.env'
+
+if local_env_path.exists():
+    load_dotenv(local_env_path)
+
+elif os.getenv('GOOGLE_CLOUD_PROJECT', None):
+    # app engine environment
+    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
+    client = secretmanager.SecretManagerServiceClient()
+    settings_name = os.getenv('SETTINGS_NAME', 'geodjango_settings')
+    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
+    payload = client.access_secret_version(name=name).payload.data.decode('UTF-8')
+
+    os.environ.update(dotenv_values(stream=io.StringIO(payload)))
+
+else:
+    raise Exception("No .env file found and GOOGLE_CLOUD_PROJECT is not set.")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*r20pa8qo366+(l9g6tlpgg5pto1@h0#7tk_bf@6!k(h%6u_-4'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
-
+#App engine url settings
+APPENGINE_URL = os.getenv('APPENGINE_URL', default=None)
+if APPENGINE_URL:
+    if not urlparse(APPENGINE_URL).scheme:
+        APPENGINE_URL = f"https://{APPENGINE_URL}"
+    
+    ALLOWED_HOSTS = [urlparse(APPENGINE_URL).netloc]
+    CSRF_TRUSTED_ORIGINS = [APPENGINE_URL]
+    SECURE_SSL_REDIRECT = True
+else:
+    # Local development settings
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -80,16 +111,30 @@ WSGI_APPLICATION = 'geodjango.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv("DB_HOST", "localhost"),
-        'PORT': os.getenv("DB_PORT", "5432"),
+DATABASE_URL = os.getenv('DATABASE_URL')
+if DATABASE_URL:
+    #use prod url if available
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+            engine='django.contrib.gis.db.backends.postgis'
+        )
+    } 
+else:
+    # use local dev db
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv("DB_HOST", "localhost"),
+            'PORT': os.getenv("DB_PORT", "5432"),
+        }
     }
-}
 
 
 # Password validation

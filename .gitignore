@@ -210,6 +210,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Google Cloud
+app.yaml
+
 # Spyder project settings
 .spyderproject
 .spyproject
