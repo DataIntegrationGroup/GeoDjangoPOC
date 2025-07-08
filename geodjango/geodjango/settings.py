@@ -28,11 +28,11 @@ local_env_path = PARENT_DIR / '.env'
 if local_env_path.exists():
     load_dotenv(local_env_path)
 
-elif os.environ.get('GOOGLE_CLOUD_PROJECT', None):
+elif os.getenv('GOOGLE_CLOUD_PROJECT', None):
     # app engine environment
-    project_id = os.environ.get('GOOGLE_CLOUD_PROJECT')
+    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
     client = secretmanager.SecretManagerServiceClient()
-    settings_name = os.environ.get('SETTINGS_NAME', 'geodjango_settings')
+    settings_name = os.getenv('SETTINGS_NAME', 'geodjango_settings')
     name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
     payload = client.access_secret_version(name=name).payload.data.decode('UTF-8')
 
@@ -51,7 +51,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 #App engine url settings
-APPENGINE_URL = os.environ.get('APPENGINE_URL', default=None)
+APPENGINE_URL = os.getenv('APPENGINE_URL', default=None)
 if APPENGINE_URL:
     if not urlparse(APPENGINE_URL).scheme:
         APPENGINE_URL = f"https://{APPENGINE_URL}"
