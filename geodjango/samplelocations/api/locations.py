@@ -1,5 +1,5 @@
 from ninja import Router
-from ..models import SampleLocation, Well, WellScreen, Contact, Owner, Lexicon
+from ..models import SampleLocation, Owner
 from django.contrib.gis.geos import Point
 from django.shortcuts import get_object_or_404
 

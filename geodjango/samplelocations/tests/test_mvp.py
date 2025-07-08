@@ -1,12 +1,23 @@
 from django.test import TestCase
 from ninja.testing import TestClient
+from geodjango.api import api
 
-client = TestClient()
 
-class TestLocations(TestCase):
+class BaseTestClass(TestCase):
+    """
+    Base class for all test cases.
+    This class can be used to set up common fixtures or configurations
+    that are shared across multiple test cases. 
+    It can also be used to define common methods that can be reused
+    in all test cases.
+    """
+
+    client = TestClient(api)
+
+class TestLocations(BaseTestClass):
 
     def test_get_locations(self):
-        response = client.get("/locations")
+        response = self.client.get("/api/locations")
         assert response.status_code == 200
 
     def test_post_location(self):
@@ -15,15 +26,15 @@ class TestLocations(TestCase):
             "point": "POINT(10.1 10.1)",
             "visible": True,
         }
-        response = client.post("/locations", json=location)
-        assert response.status_code == 201
+        response = self.client.post("/api/locations", json=location)
+        assert response.status_code == 200
         assert response.json()["id"] is not None
 
 
-class TestWells(TestCase):
+class TestWells(BaseTestClass):
 
     def test_get_wells(self):
-        response = client.get("/wells")
+        response = self.client.get("/api/wells")
         assert response.status_code == 200
 
     def test_post_well(self):
@@ -40,7 +51,7 @@ class TestWells(TestCase):
             "formation_zone": "San Andres",
             "construction_notes": "this is a test of notes",
         }
-        response = client.post("/wells", json=well)
+        response = self.client.post("/wells", json=well)
         assert response.status_code == 201
         assert response.json()["id"] is not None
 
@@ -52,20 +63,21 @@ class TestWells(TestCase):
             "screen_depth_bottom": 120.0,
             "screen_type": "PVC",
         }
-        response = client.post("/wells/well-screens/", json=well_screen)
-        assert response.status_code == 201
+        response = self.client.post("/api/wells/well-screens/", json=well_screen)
+        assert response.status_code == 200
         assert response.json()["id"] is not None
 
 
-class TestContacts(TestCase):
+class TestContacts(BaseTestClass):
+
     def test_post_contact(self):
         contact = {
             "well_id": 1,
             "name": "John Doe",
             "email": "foo@gmail.com",
         }
-        response = client.post("/wells/contacts/", json=contact)
-        assert response.status_code == 201
+        response = self.client.post("/api/wells/contacts/", json=contact)
+        assert response.status_code == 200
         assert response.json()["id"] is not None
 
 # #  ============== optional ? =============
