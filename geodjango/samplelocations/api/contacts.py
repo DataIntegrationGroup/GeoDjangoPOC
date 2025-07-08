@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 router = Router()
 
 @router.post("")
-def add_contact_for_well(
+def post_contact(
     request,
     well_id: int,
     name: str,
