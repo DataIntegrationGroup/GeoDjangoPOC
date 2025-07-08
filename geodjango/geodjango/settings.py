@@ -132,3 +132,21 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+UNFOLD = {
+    "COLORS": {
+        "primary": {
+            "50":  "242, 248, 248",
+            "100": "230, 240, 242",
+            "200": "191, 219, 222",
+            "300": "153, 197, 202",
+            "400": "115, 175, 182",
+            "500": "0, 110, 123", 
+            "600": "0, 94, 105",
+            "700": "0, 77, 86",
+            "800": "0, 61, 68",
+            "900": "0, 44, 49",
+            "950": "0, 28, 31",
+        },
+    }
+}
