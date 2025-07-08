@@ -1,11 +1,35 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin 
 from .models import SampleLocation, Owner, Contact, Well, Lexicon, WellScreen, Equipment, Spring 
 
-admin.site.register(SampleLocation)
-admin.site.register(Owner)
-admin.site.register(Contact)
-admin.site.register(Lexicon)
-admin.site.register(Well)
-admin.site.register(WellScreen)
-admin.site.register(Equipment)
-admin.site.register(Spring)
+@admin.register(SampleLocation)
+class SampleLocationAdmin(ModelAdmin):
+    pass
+
+@admin.register(Owner)
+class OwnerAdmin(ModelAdmin):
+    pass
+
+@admin.register(Contact)
+class ContactAdmin(ModelAdmin):
+    pass
+
+@admin.register(Lexicon)
+class LexiconAdmin(ModelAdmin):
+    pass
+
+@admin.register(Well)
+class WellAdmin(ModelAdmin):
+    pass
+
+@admin.register(WellScreen)
+class WellScreenAdmin(ModelAdmin):
+    pass
+
+@admin.register(Equipment)
+class EquipmentAdmin(ModelAdmin):
+    pass
+
+@admin.register(Spring)
+class SpringAdmin(ModelAdmin):
+    pass
