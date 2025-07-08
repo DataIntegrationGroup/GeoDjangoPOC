@@ -58,7 +58,7 @@ You can replace `makemigrations`, `migrate`, etc. with any Django command as nee
   [http://localhost:8000/](http://localhost:8000/)
 
 - **API Docs:**  
-  [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
+  [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
 
 - **Sample Locations API Endpoint Example:**  
   [http://localhost:8000/api/samplelocations/](http://localhost:8000/api/samplelocations/)
