@@ -42,7 +42,7 @@ def post_well(
 
 
 @router.post("well-screens/")
-def add_well_screen(request, well_id: int, screen_depth_top: float, screen_depth_bottom: float, screen_type_id: int = None):
+def post_well_screen(request, well_id: int, screen_depth_top: float, screen_depth_bottom: float, screen_type_id: int = None):
     well = get_object_or_404(Well, id=well_id)
     screen_type = Lexicon.objects.filter(id=screen_type_id).first() if screen_type_id else None
     screen = WellScreen.objects.create(
