@@ -51,8 +51,8 @@ class TestWells(BaseTestClass):
             "formation_zone": "San Andres",
             "construction_notes": "this is a test of notes",
         }
-        response = self.client.post("/wells", json=well)
-        assert response.status_code == 201
+        response = self.client.post("/api/wells", json=well)
+        assert response.status_code == 200
         assert response.json()["id"] is not None
 
 
