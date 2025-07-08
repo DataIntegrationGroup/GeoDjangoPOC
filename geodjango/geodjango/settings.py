@@ -148,5 +148,8 @@ UNFOLD = {
             "900": "0, 44, 49",
             "950": "0, 28, 31",
         },
-    }
+    },
+    "SITE_TITLE": "NMBGMR",
+    "SITE_HEADER": "NMBGMR",
+    "SITE_SUBHEADER": "Data Management System",
 }
