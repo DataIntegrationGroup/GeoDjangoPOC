@@ -1,5 +1,5 @@
-from . import BaseTestClass
-from geodjango.samplelocations.models import Thing, Location, Geochronology
+from samplelocations.tests import BaseTestClass
+from samplelocations.models import Thing, Location, Geochronology
 
 class TestAddGeochronology(BaseTestClass):
 

@@ -1,4 +1,4 @@
-from . import BaseTestClass
+from samplelocations.tests import BaseTestClass
 
 
 class TestAddGroup(BaseTestClass):

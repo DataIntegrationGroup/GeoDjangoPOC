@@ -1,9 +1,8 @@
-from . import BaseTestClass
+from samplelocations.tests import BaseTestClass
+from samplelocations.models import Thing
 
 #  ADD tests ======================================================
 
-
-from geodjango.samplelocations.models import Thing
 
 class TestAddContact(BaseTestClass):
     """
