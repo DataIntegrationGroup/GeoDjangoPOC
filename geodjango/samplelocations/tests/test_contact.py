@@ -27,7 +27,7 @@ class TestAddContact(BaseTestClass):
             json={
                 "name": "Test Contact",
                 "role": "Owner",
-                "thing_id": self.thing.id,
+                "thing_id": self.thing.thing_id,
                 "emails": [{"email": "test@example.com", "email_type": "Primary"}],
                 "phones": [{"phone_number": "+12345678901", "phone_type": "Primary"}],
                 "addresses": [
@@ -80,7 +80,7 @@ class TestAddContact(BaseTestClass):
                 "/contact",
                 json={
                     "name": "Test Contact 2",
-                    "thing_id": self.thing.id,
+                    "thing_id": self.thing.thing_id,
                     "role": "Primary",
                     "emails": [{"email": "fasdfasdf@gmail.com", "email_type": "Primary"}],
                     "phones": [{"phone_number": phone, "phone_type": "Primary"}],
@@ -117,7 +117,7 @@ class TestAddContact(BaseTestClass):
                 "/contact",
                 json={
                     "name": "Test ContactX",
-                    "thing_id": self.thing.id,
+                    "thing_id": self.thing.thing_id,
                     "role": "Primary",
                     "emails": [{"email": email, "email_type": "Primary"}],
                     "phones": [{"phone_number": "+12345678901", "phone_type": "Primary"}],
