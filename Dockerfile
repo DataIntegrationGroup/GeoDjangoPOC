@@ -24,4 +24,5 @@ COPY . .
 WORKDIR /app/geodjango
 
 EXPOSE 8080
-CMD ["gunicorn", "-b", ":8080", "geodjango.wsgi", "--threads", "1"]
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && \
+                 gunicorn -b :8080 geodjango.wsgi --threads 1"]
