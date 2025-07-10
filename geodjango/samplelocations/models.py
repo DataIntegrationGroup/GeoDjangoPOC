@@ -66,12 +66,16 @@ class Location_Thing_Junction(models.Model):
         verbose_name= "related thing"
     )
 
-    # Define composite primary key. A composite primary key, when defined using CompositePrimaryKey, is considered a virtual field.
+    # Define composite primary key. A composite primary key, when defined using
+    # CompositePrimaryKey, is considered a virtual field.
     pk = models.CompositePrimaryKey("location_id", "thing_id")
 
     # Additional fields
     effective_start = models.DateTimeField()
     effective_end = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.location} - {self.thing}"
 
     class Meta:
         db_table_comment = "Junction table linking Location and Thing models"
