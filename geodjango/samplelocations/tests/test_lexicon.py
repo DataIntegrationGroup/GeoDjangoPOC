@@ -70,7 +70,7 @@ class TestAddLexicon(BaseTestClass):
         self.assertEqual(data["predicate"], predicate)
         self.assertEqual(data["object_"], object_["term"])
 
-class TestAddLexicon(BaseTestClass):
+class TestGetLexicon(BaseTestClass):
 
     def setUp(self):
         super().setUp()
