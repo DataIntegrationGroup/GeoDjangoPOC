@@ -3,28 +3,41 @@ from django.contrib.gis.db import models
 #--------Location model -----------
 
 class Location(models.Model):
+    """Represents a point location on the earth's surface"""
     location_id = models.BigAutoField(primary_key=True)
-    point = models.PointField(srid=4326, spatial_index=True, dim=3, db_comment= "Defines the (X,Y,Z) coordinates of a location") #Did we come to a consensus on srid? 'dim = 3' allows the point to store Z information, i.e. elevation information.
-    date_created = models.DateTimeField(auto_now_add=True)
+    point = models.PointField(
+        srid=4326, #TODO: Did we come to a consensus on srid?
+        spatial_index=True,
+        dim=3, # Enable storage of Z data, e.g. elevation
+        db_comment= "Defines the (X,Y,Z) coordinates of a location" # Comment on the database field. Stored at the db level.
+    )
+    date_created= models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = "Location"
+        verbose_name = "Location" # human-readable, singular name to the model. This name is used by Django in various contexts, most notably in the Django admin interface.
         verbose_name_plural = "Locations"
-        db_table_comment = "This table stores point locations on the earth's surface"
+        db_table_comment = "This table stores point locations on the earth's surface" # Comment on the database table. Stored at the database level. Intended for individuals with direct database access who may not be working in the Django codebase.
+
 
 #--------Thing model -----------
+
 class Thing(models.Model):
+    """A base model representing a generic monitoring station (Thing)"""
     thing_id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     release_status = models.BooleanField(default=False) #TODO: What information does this field capture?
     date_created = models.DateTimeField(auto_now_add=True)
-
-    # Define the M:M relationship using the 'through' option.
-    # verbose_name option is also required for ManyToManyField (https://docs.djangoproject.com/en/5.2/topics/db/models/#verbose-field-names)
-    location = models.ManyToManyField(Location, through="Location_Thing_Junction", verbose_name= "the related location")
+    # The 'location' field specifies the M:M relationship and specifies
+    # the 'Locoation_Thing_Juncation' as the intermediate table.
+    location = models.ManyToManyField(
+        Location,
+        through="Location_Thing_Junction", # specify the intermediate model to manage the many-to-many relationship.
+        related_name="things", # define the reverse relationship for backend logic and database queries.
+        verbose_name= "related location" # Human-readable label for user interfaces like forms and the admin panel.
+    )
 
     def __str__(self):
         return self.name
@@ -33,11 +46,25 @@ class Thing(models.Model):
         verbose_name = "Thing"
         verbose_name_plural = "Things"
 
+
 #--------Junction model for the Location and Thing models -----------
+
 class Location_Thing_Junction(models.Model):
-    # Define 1:M relationship using models.ForeignKey
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name= "locations", verbose_name= "the related location") #Django appends "_id" to FK field names (https://docs.djangoproject.com/en/5.2/ref/models/fields/#database-representation)
-    thing = models.ForeignKey(Thing, on_delete=models.CASCADE, related_name= "things", verbose_name= "the related thing")
+    """A junction model linking a Thing to a Location"""
+    # Define a 1:M relationship using models.ForeignKey.
+    # Django appends "_id" to FK field names (https://docs.djangoproject.com/en/5.2/ref/models/fields/#database-representation)
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.CASCADE,
+        related_name= "locations",
+        verbose_name= "related location"
+    )
+    thing = models.ForeignKey(
+        Thing,
+        on_delete=models.CASCADE,
+        related_name= "things",
+        verbose_name= "related thing"
+    )
 
     # Define composite primary key. A composite primary key, when defined using CompositePrimaryKey, is considered a virtual field.
     pk = models.CompositePrimaryKey("location_id", "thing_id")
@@ -47,12 +74,14 @@ class Location_Thing_Junction(models.Model):
     effective_end = models.DateTimeField()
 
     class Meta:
-        db_table_comment = "Junction table linking Location and Thing"
+        db_table_comment = "Junction table linking Location and Thing models"
 
-#--------WellThing model -----------
-class WellThing(models.Model):
-    wellthing_id = models.BigAutoField(primary_key=True)
-    thing = models.ForeignKey(Thing, related_name='wellthings', on_delete=models.CASCADE)
+
+#--------WellThing model. Inherits all fields from Thing model -----------
+class WellThing(Thing):
+    """A specific type of monitoring station (Thing)."""
+    # This field creates the inheritance link from WellThing back to Thing.
+    thing_ptr= models.OneToOneField(Thing, parent_link = True, related_name='things', verbose_name="related thing", on_delete=models.CASCADE)
     well_depth = models.FloatField(blank=True, null=True, help_text="feet below ground surface")
     hole_depth = models.FloatField(blank=True, null=True, help_text="feet below ground surface")
     casing_diameter = models.FloatField(blank=True, null=True, help_text="inches")
