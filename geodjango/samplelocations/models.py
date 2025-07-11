@@ -131,7 +131,7 @@ class SpringThing(Thing):
 
 
 #--------Sensor model-----------
-
+#TODO: add a 'name' field to this model.
 class Sensor(models.Model):
     sensor_id = models.BigAutoField(primary_key=True)
     serial_number = models.CharField(max_length=50, blank=True, null=True)
@@ -145,12 +145,13 @@ class Sensor(models.Model):
 
 #--------Datastream (Series) model-----------
 
+#TODO: define a dunder string to return the observed property and the related thing.
 class Datastream(models.Model):
     """ A collection of observations from a Thing collected using a Sensor."""
     datastream_id = models.BigAutoField(primary_key=True)
     thing = models.ForeignKey(Thing, on_delete=models.CASCADE, related_name="datastreams", verbose_name="related thing")
     sensor_id = models.OneToOneField(Sensor, on_delete=models.CASCADE, related_name="datastreams", verbose_name="related sensor")
-    observed_property = models.CharField(max_length=100)
+    observed_property = models.CharField(max_length=100) #TODO: should a list of observed properties be stored in the Lexicon model?
     release_status = models.BooleanField(default=False)
 
 
