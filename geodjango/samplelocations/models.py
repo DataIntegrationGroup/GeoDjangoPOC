@@ -1,5 +1,11 @@
 from django.contrib.gis.db import models
 
+"""General notes (7/11/2025):
+ 1. Foreign keys that were noton starred MVP models weren't included in this file.
+ 2. Some dunder string methods could be updated for clarity.
+ 3. THere may also  be some related models that do not need to registered with the admin.
+ 4. Have not implemented the clean functions we talked about earlier this week."""
+
 #--------Location model -----------
 
 #TODO: Additional admin configuration is needed for this model. The admin panel currently
@@ -145,7 +151,7 @@ class Sensor(models.Model):
 
 #--------Datastream (Series) model-----------
 
-#TODO: define a dunder string to return the observed property and the related thing.
+#TODO: define a dunder string method to return the observed property and the related thing.
 class Datastream(models.Model):
     """ A collection of observations from a Thing collected using a Sensor."""
     datastream_id = models.BigAutoField(primary_key=True)
@@ -164,7 +170,7 @@ class Sample(models.Model):
     sample_date = models.DateTimeField()
     sample_notes = models.TextField(blank=True, null=True)
 
-    #TODO: This could be updated in a way that doesn't return the sample id in the admin panel.
+    #TODO: This could be updated in a way that is more easily understood. So doesn't return the sample id in the admin panel.
     # It's confusing in the admin panel to see "Sample 3 from Thing1" when it's the first sample
     # from Thing1 but the third sample in the sample table. If this doesn't makes sense, try
     # creating three samples from two different Things from the admin panel.
