@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,8 +82,12 @@ WSGI_APPLICATION = 'geodjango.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv("DB_HOST", "localhost"),
+        'PORT': os.getenv("DB_PORT", "5432"),
     }
 }
 
@@ -123,3 +132,24 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+UNFOLD = {
+    "COLORS": {
+        "primary": {
+            "50":  "242, 248, 248",
+            "100": "230, 240, 242",
+            "200": "191, 219, 222",
+            "300": "153, 197, 202",
+            "400": "115, 175, 182",
+            "500": "0, 110, 123", 
+            "600": "0, 94, 105",
+            "700": "0, 77, 86",
+            "800": "0, 61, 68",
+            "900": "0, 44, 49",
+            "950": "0, 28, 31",
+        },
+    },
+    "SITE_TITLE": "NMBGMR",
+    "SITE_HEADER": "NMBGMR",
+    "SITE_SUBHEADER": "Data Management System",
+}

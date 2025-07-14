@@ -1,0 +1,30 @@
+{% extends "samplelocations/base.html" %}
+
+{% block title %}Sample Locations Table{% endblock %}
+
+{% block content %}
+    <h1>Sample Locations</h1>
+    <table border="1" cellpadding="10" cellspacing="0">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Visible</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+        </tr>
+        {% for loc in locations %}
+        <tr>
+            <td>{{ loc.name }}</td>
+            <td>{{ loc.description }}</td>
+            <td>{{ loc.visible }}</td>
+            <td>{% if loc.point %}{{ loc.point.y }}{% endif %}</td>
+            <td>{% if loc.point %}{{ loc.point.x }}{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% if locations %}
+        <p>Total locations: {{ locations|length }}</p>
+    {% else %}
+        <p>No locations found.</p>
+    {% endif %}
+{% endblock %}

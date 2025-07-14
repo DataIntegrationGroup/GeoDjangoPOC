@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>{% block title %}GeoDjango Data Manager{% endblock %}</title>
+</head>
+
+<body>
+    <div class="layout">
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <h1>NM Aquifer</h1>
+            </div>
+            <nav class="sidebar-nav">
+                {% block sidebar %}
+                <ul>
+                    <li><a href="/">Sample Locations</a></li>
+                </ul>
+                {% endblock %}
+            </nav>
+        </aside>
+
+        <main id="content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
