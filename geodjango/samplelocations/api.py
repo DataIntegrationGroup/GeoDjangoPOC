@@ -1,22 +1,19 @@
 from ninja import Router
-from .models import SampleLocation
+from .models import Location
 
 router = Router()
 
 @router.get('')
-def list_samplelocations(request):
+def list_locations(request):
     """
-    List all sample locations.
+    List all locations.
     """
-    locations = SampleLocation.objects.all()
+    locations = Location.objects.all()
     return [
         {
-            'id': loc.id,
+            'id': loc.location_id,
             'name': loc.name,
-            'lat': loc.point.y,
-            'lon': loc.point.x,
-            'description': loc.description,
-            'visible': loc.visible,
+            'coordinates': loc.coordinate,
             'date_created': loc.date_created.isoformat(),
         }
         for loc in locations
