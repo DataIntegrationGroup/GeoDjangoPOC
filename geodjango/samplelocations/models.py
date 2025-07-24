@@ -119,26 +119,6 @@ class Location_Thing_Junction(models.Model):
         db_table_comment = "Junction table linking Location and Thing models"
 
 
-#--------SpringThing model. Inherits all fields from Thing model -----------
-
-class SpringThing(Thing):
-    """ A specific type of monitoring station (Thing) representing a spring."""
-    springthing_id = models.BigAutoField(primary_key=True)
-    # This field creates the inheritance link from SpringThing back to Thing.
-    # The name 'thing_ptr' is a conventional naming choice in Django for the parent link field,
-    thing_ptr = models.OneToOneField(
-        Thing,
-        on_delete=models.CASCADE,
-        parent_link=True,
-        related_name='springthings',
-        verbose_name="related thing"
-    )
-    description = models.CharField(max_length=255, blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.name} (Spring)"
-
-
 #--------Sensor model-----------
 #TODO: add a 'name' field to this model.
 class Sensor(models.Model):
