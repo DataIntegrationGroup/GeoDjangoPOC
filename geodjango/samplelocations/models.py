@@ -64,6 +64,17 @@ class Thing(models.Model):
         verbose_name= "related location" # Human-readable label for user interfaces like forms and the admin panel.
     )
 
+    #Fields specific to a WELL
+    well_depth_ft = models.FloatField(blank=True, null=True, help_text="well depth feet below ground surface")
+    hole_depth_ft = models.FloatField(blank=True, null=True, help_text="hole depth feet below ground surface")
+    casing_diameter_ft = models.FloatField(blank=True, null=True, help_text="casing diameter in ft")
+    casing_depth_ft = models.FloatField(blank=True, null=True, help_text="casing depth feet below ground surface")
+    casing_description = models.CharField(max_length=50, blank=True, null=True)
+    construction_notes = models.TextField(blank=True, null=True)  # Use TextField over CharField for long-form text of variable length without a predefined limit.
+
+    #Fields specific to a SPRING
+    spring_type = models.CharField(max_length=255, blank=True, null=True) # e.g. "artesian", "subartesian", "thermal", etc.
+
     def __str__(self):
         return f"Thing object with id {self.thing_id} and name {self.name}"
 
