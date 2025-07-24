@@ -37,8 +37,22 @@ class Location(models.Model):
 
 class Thing(models.Model):
     """A base model representing a generic monitoring station (Thing)"""
+
+    # Define class-based choices for the 'thing_type' field.
+    # This allows for a more structured way to define and use choices in Django models.
+    # The format is CHOICE = " database value", "human-readable or display name"
+    class ThingType(models.TextChoices):
+        WELL = "W", "Well"
+        SPRING = "S", "Spring"
+
     thing_id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
+    thing_type = models.CharField(
+        max_length=2,
+        choices=ThingType.choices,  # Use the choices defined in the ThingType class.
+        default=ThingType.WELL,  # Set a default value for the field.
+        verbose_name="type of thing"  # Human-readable label for user interfaces like forms and admin panel.
+        )
     release_status = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
     # The 'location' field sets up the M:M relationship and specifies
