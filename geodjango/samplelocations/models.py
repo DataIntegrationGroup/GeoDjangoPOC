@@ -76,7 +76,7 @@ class Thing(models.Model):
     spring_type = models.CharField(max_length=255, blank=True, null=True) # e.g. "artesian", "subartesian", "thermal", etc.
 
     def __str__(self):
-        return f"Thing object with id {self.thing_id} and name {self.name}"
+        return f"Thing object is a {self.thing_type} with name {self.name}"
 
     class Meta:
         verbose_name = "Thing"
