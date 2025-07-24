@@ -74,6 +74,7 @@ class Thing(models.Model):
 
     #Fields specific to a SPRING
     spring_type = models.CharField(max_length=255, blank=True, null=True) # e.g. "artesian", "subartesian", "thermal", etc.
+    description_spring = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"Thing object is a {self.thing_type} with name {self.name}"
@@ -116,31 +117,6 @@ class Location_Thing_Junction(models.Model):
             models.UniqueConstraint(fields=["location_id", "thing_id"], name="unique_location_thing")
         ]
         db_table_comment = "Junction table linking Location and Thing models"
-
-
-#--------WellThing model. Inherits all fields from Thing model -----------
-
-class WellThing(Thing):
-    """ A specific type of monitoring station (Thing) representing a well."""
-    wellthing_id = models.BigAutoField(primary_key=True)
-    # This field creates the inheritance link from WellThing back to Thing.
-    # The name 'thing_ptr' is a conventional naming choice in Django for the parent link field,
-    thing_ptr= models.OneToOneField(
-        Thing,
-        on_delete=models.CASCADE,
-        parent_link = True,
-        related_name='wellthings',
-        verbose_name="related thing"
-    )
-    well_depth_ft = models.FloatField(blank=True, null=True, help_text="well depth feet below ground surface")
-    hole_depth_ft = models.FloatField(blank=True, null=True, help_text="hole depth feet below ground surface")
-    casing_diameter_ft = models.FloatField(blank=True, null=True, help_text="casing diameter in ft")
-    casing_depth_ft = models.FloatField(blank=True, null=True, help_text="casing depth feet below ground surface")
-    casing_description = models.CharField(max_length=50, blank=True, null=True)
-    construction_notes = models.TextField(blank=True, null=True) # Use TextField over CharField for long-form text of variable length without a predefined limit.
-
-    def __str__(self):
-        return f"{self.name} (Well)"
 
 
 #--------SpringThing model. Inherits all fields from Thing model -----------
