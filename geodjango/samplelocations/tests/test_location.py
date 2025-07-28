@@ -65,6 +65,11 @@ class TestGetLocation(BaseTestClass):
         self.location.delete()
         return super().tearDown()
 
+    def test_list_locations(self):
+        """
+        list al locations in the database as a feature collection
+        """
+
     def get_specific_location(self):
         response = self.client.get(f"/location/{self.location.id}")
         self.assertEqual(response.status_code, 200)
