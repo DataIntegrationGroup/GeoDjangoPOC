@@ -1,4 +1,3 @@
-from geodjango.samplelocations.api import locations
 from ninja import Router, Schema
 from samplelocations.models import Thing, Location, Location_Thing_Junction
 from django.contrib.gis.geos import Point
@@ -8,7 +7,7 @@ from typing import List
 router = Router()
 
 
-class GeoJSONGeometry(BaseModel):
+class GeoJSONGeometry(Schema):
     """
     Geometry schema for GeoJSON response.
     """

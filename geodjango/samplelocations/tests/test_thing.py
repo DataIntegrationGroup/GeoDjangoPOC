@@ -13,12 +13,10 @@ class TestThing(BaseTestClass):
 
         # Create Location records
         self.location1 = Location.objects.create(
-            name="Test Location 1",
             coordinate="POINT(10.0 10.0 100.0)",
             date_created="2023-10-01T00:00:00Z",
         )
         self.location2 = Location.objects.create(
-            name="Test Location 2",
             coordinate="POINT(20.0 20.0 200.0)",
             date_created="2023-10-01T00:00:00Z",
         )
@@ -30,7 +28,7 @@ class TestThing(BaseTestClass):
             thing_type="well",
             release_status=True,
             date_created="2023-10-01T00:00:00Z",
-            location_id=self.location1.location_id,
+            # location_id=self.location1.location_id,
             well_depth_ft=100.0,
             hole_depth_ft=120.0,
             casing_diameter_ft=10.0,
@@ -44,9 +42,12 @@ class TestThing(BaseTestClass):
             thing_type="spring",
             release_status=True,
             date_created="2023-10-01T00:00:00Z",
-            location_id=self.location2.location_id,
             spring_type="thermal",
         )
+
+        # Assign locations using the ManyToManyField
+        self.well_thing.location_id.set([self.location1])
+        self.spring_thing.location_id.set([self.location2])
 
         # Create Location_Thing_Junction records
         self.junction1 = Location_Thing_Junction.objects.create(
