@@ -1,35 +1,67 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin 
-from .models import SampleLocation, Owner, Contact, Well, Lexicon, WellScreen, Equipment, Spring 
+from unfold.admin import ModelAdmin
+from django import forms
+from django.contrib.gis.admin import GISModelAdmin
+from django.contrib.gis.geos import Point
+from samplelocations.models import Location, Thing, WellThing, SpringThing, Location_Thing_Junction, Sensor, Datastream, Observation, \
+    GroundwaterLevelObservation, Sample
 
-@admin.register(SampleLocation)
-class SampleLocationAdmin(ModelAdmin):
+class LocationForm(forms.ModelForm):
+    x = forms.FloatField(label="Longitude")
+    y = forms.FloatField(label="Latitude")
+    z = forms.FloatField(label="Elevation")
+
+
+    class Meta:
+        model = Location
+        fields = ["x", "y", "z"]
+
+    def save(self, commit=True):
+        self.instance.coordinate = Point(self.cleaned_data["x"], self.cleaned_data["y"], self.cleaned_data["z"], srid=4326)
+        return super().save(commit=commit)
+
+@admin.register(Location)
+class LocationAdmin(GISModelAdmin):
+    form = LocationForm
+    list_display = ("location_id", "coordinate", "date_created")
+
+@admin.register(Thing)
+class ThingAdmin(ModelAdmin):
     pass
 
-@admin.register(Owner)
-class OwnerAdmin(ModelAdmin):
+@admin.register(WellThing)
+class WellThingAdmin(ModelAdmin):
     pass
 
-@admin.register(Contact)
-class ContactAdmin(ModelAdmin):
+@admin.register(SpringThing)
+class SpringThingAdmin(ModelAdmin):
     pass
 
-@admin.register(Lexicon)
-class LexiconAdmin(ModelAdmin):
+@admin.register(Location_Thing_Junction)
+class LocationThingJunctionAdmin(ModelAdmin):
     pass
 
-@admin.register(Well)
-class WellAdmin(ModelAdmin):
+@admin.register(Sensor)
+class SensorAdmin(ModelAdmin):
     pass
 
-@admin.register(WellScreen)
-class WellScreenAdmin(ModelAdmin):
+@admin.register(Datastream)
+class DatastreamAdmin(ModelAdmin):
     pass
 
-@admin.register(Equipment)
-class EquipmentAdmin(ModelAdmin):
+@admin.register(Observation)
+class ObservationAdmin(ModelAdmin):
     pass
 
-@admin.register(Spring)
-class SpringAdmin(ModelAdmin):
+@admin.register(GroundwaterLevelObservation)
+class GroundwaterLevelObservationAdmin(ModelAdmin):
     pass
+
+@admin.register(Sample)
+class SampleAdmin(ModelAdmin):
+    pass
+
+#admin.site.register(Lexicon)
+#admin.site.register(WellScreen)
+#admin.site.register(Equipment)
+#admin.site.register(Spring)
