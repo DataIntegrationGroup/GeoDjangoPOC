@@ -29,14 +29,6 @@ class LocationAdmin(GISModelAdmin):
 class ThingAdmin(ModelAdmin):
     pass
 
-# @admin.register(WellThing)
-# class WellThingAdmin(ModelAdmin):
-#     pass
-
-# @admin.register(SpringThing)
-# class SpringThingAdmin(ModelAdmin):
-#     pass
-
 @admin.register(Location_Thing_Junction)
 class LocationThingJunctionAdmin(ModelAdmin):
     pass
@@ -60,6 +52,14 @@ class GroundwaterLevelObservationAdmin(ModelAdmin):
 @admin.register(Sample)
 class SampleAdmin(ModelAdmin):
     pass
+
+# @admin.register(WellThing)
+# class WellThingAdmin(ModelAdmin):
+#     pass
+
+# @admin.register(SpringThing)
+# class SpringThingAdmin(ModelAdmin):
+#     pass
 
 #admin.site.register(Lexicon)
 #admin.site.register(WellScreen)
