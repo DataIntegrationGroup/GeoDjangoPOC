@@ -1,38 +1,45 @@
-# from ninja import Router
-# from samplelocations.models import Location, Owner
-# from django.contrib.gis.geos import Point
-# from django.shortcuts import get_object_or_404
+from ninja import Router, Schema
+from samplelocations.models import Location
+from typing import List
 
-# router = Router()
+router = Router()
 
-# @router.get('')
-# def get_locations(request):
-#     """
-#     List all sample locations.
-#     """    
-#     locations = SampleLocation.objects.all()
-#     return [
-#         {
-#             'id': loc.id,
-#             'name': loc.name,
-#             'lat': loc.point.y,
-#             'lon': loc.point.x,
-#             'description': loc.description,
-#             'visible': loc.visible,
-#             'date_created': loc.date_created.isoformat(),
-#         }
-#         for loc in locations
-#     ]
+class NotFoundSchema(Schema):
+    detail: str
 
-# @router.post("")
-# def post_location(request, name: str, lat: float, lon: float, owner_id: int, description: str = None, visible: bool = False):
-#     owner = get_object_or_404(Owner, id=owner_id)
-#     point = Point(lon, lat)
-#     location = SampleLocation.objects.create(
-#         name=name,
-#         description=description,
-#         visible=visible,
-#         point=point,
-#         owner=owner
-#     )
-#     return {"id": location.id, "name": location.name}
+class LocationSchema(Schema):
+    location_id: int
+    coordinates: str
+    date_created: str
+
+@router.get("")
+def get_locations(request) -> List[LocationSchema]:
+    """
+    List all sample locations.
+    """    
+    locations = Location.objects.all()
+
+    response = [
+        {
+            "location_id": location.location_id,
+            "coordinates": f"POINT({location.coordinate.x} {location.coordinate.y} {location.coordinate.z})",
+            "date_created": location.date_created.isoformat(),
+        }
+        for location in locations
+    ]
+
+    return response
+
+@router.get("/{location_id}", response={200: LocationSchema, 404: NotFoundSchema})
+def get_location_by_id(request, location_id: int):
+    locations = Location.objects.filter(location_id=location_id)
+    if not locations.exists():
+        return 404, {"detail": f"Location with location_id {location_id} not found"}
+
+    location = locations.first()
+    response = {
+        "location_id": location.location_id,
+        "coordinates": f"POINT({location.coordinate.x} {location.coordinate.y} {location.coordinate.z})",
+        "date_created": location.date_created.isoformat(),
+    }
+    return response
