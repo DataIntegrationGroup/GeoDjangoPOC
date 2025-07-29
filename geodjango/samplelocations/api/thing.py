@@ -2,10 +2,14 @@ from ninja import Router, Schema
 from samplelocations.models import Thing, Location, Location_Thing_Junction
 from django.contrib.gis.geos import Point
 from django.shortcuts import get_object_or_404
-from typing import List
+from django.forms.models import model_to_dict
+from django.http import HttpResponse
+from typing import List, Tuple
 
 router = Router()
 
+class NotFoundSchema(Schema):
+    detail: str
 
 class GeoJSONGeometry(Schema):
     """
@@ -49,7 +53,7 @@ class SpringFeature(Feature):
 
 class FeatureCollection(Schema):
     type: str = "FeatureCollection"
-    features: List[WellFeature | SpringFeature] = []
+    features: List = [] # can be WellFeature or SpringFeature. Specifying a union of both types makes the schema include unrelated fields, which is not desired.
 
 
 def get_things(thing_id: int | None = None) -> List[Thing]:
@@ -66,21 +70,35 @@ def construct_feature_collection(things: List[Thing]) -> FeatureCollection:
     """
     Construct a GeoJSON FeatureCollection from a list of Thing objects.
     """
-    location_thing_junctions = Location_Thing_Junction.objects.filter(thing_id__in=things.values_list('thing_id', flat=True))
-    locations = Location.objects.filter(location_id__in=location_thing_junctions.values_list('location_id', flat=True))
+    """
+    Jacob's notes during development: 2025-07-28
+    A disadvantage of Django ORM is that you can't make more complicated queries.
+    From what I understand, you can use Django ORM to get all the things and their related locations,
+    but you can't easily filter or join them in a single query. The "joining" has to be done in
+    Python code after fetching the data, which can be less efficient because it's slower than
+    SQL and you have to make more SQL queries to get the related data.
+
+    Also, the filtering is kind of confusing...
+    """
+    thing_ids = [thing.thing_id for thing in things]
+    location_thing_junctions = Location_Thing_Junction.objects.filter(thing_id__in=thing_ids)
+    location_ids = [junction.location_id.location_id for junction in location_thing_junctions]
+    locations = Location.objects.filter(location_id__in=location_ids)
 
     features = []
     for thing in things:
-        if thing.thing_type == "well":
-            thing_properties = WellProperties(**thing)
-        elif thing.thing_type == "spring":
-            thing_properties = SpringProperties(**thing)
+        thing_dict = model_to_dict(thing)
+        thing_dict["location_id"] = thing_dict["location_id"][0].location_id
+        thing_dict["date_created"] = thing.date_created.isoformat()
+        thing_dict["thing_type"] = thing.get_thing_type_display()  # Get human-readable type
+        if thing.thing_type == "W":
+            thing_properties = WellProperties(**thing_dict)
+        elif thing.thing_type == "S":
+            thing_properties = SpringProperties(**thing_dict)
 
-        thing_id = thing.thing_id
-        location_ids = [junction.location_id for junction in location_thing_junctions if junction.thing_id == thing_id]
-        locations = [loc for loc in locations if loc.location_id in location_ids]
+        locations = thing.location_id.all()
 
-        # assuming, for now, that each thing has a single location
+        # TODO: assuming, for now, that each thing has a single location. this will have to change if we allow multiple locations per thing.
         location = locations[0]
 
         feature = {
@@ -106,27 +124,17 @@ def get_all_things(request):
     """
     List all things.
     """
-    """
-    Jacob's notes during development: 2025-07-28
-    A disadvantage of Django ORM is that you can't make more complicated queries.
-    From what I understand, you can use Django ORM to get all the things and their related locations,
-    but you can't easily filter or join them in a single query. The "joining" has to be done in
-    Python code after fetching the data, which can be less efficient because it's slower than
-    SQL and you have to make more SQL queries to get the related data.
-
-    Also, the filtering is kind of confusing...
-    """
     things = get_things()
     response = construct_feature_collection(things)
     return response
 
-@router.get('/{thing_id}')
+@router.get('/{thing_id}', response={200: FeatureCollection, 404: NotFoundSchema})
 def get_thing_by_id(request, thing_id: int):
     """
     Retrieve a specific thing by its ID.
     """
     thing = get_things(thing_id=thing_id)
-    if thing == []:
-        return {"detail": f"Thing with id {thing_id} not found"}, 404
+    if thing == [None]:
+        return 404, {"detail": f"Thing with id {thing_id} not found"}
     response = construct_feature_collection(thing)
     return response
