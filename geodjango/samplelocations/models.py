@@ -158,7 +158,7 @@ class Sample(models.Model):
     """Represents a sample collected from a Thing"""
     sample_id = models.BigAutoField(primary_key=True)
     thing_id = models.ForeignKey(Thing, on_delete=models.CASCADE, related_name="samples", verbose_name="related thing")
-    sample_matrix - models.CharField(
+    sample_matrix = models.CharField(
         max_length=2,
         choices=SampleMatrix.choices,  # Use the choices defined in the SampleMatrix class
         default=SampleMatrix.GROUNDWATER,  # Set a default value for the field.
