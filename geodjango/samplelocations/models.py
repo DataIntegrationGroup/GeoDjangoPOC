@@ -148,11 +148,22 @@ class Datastream(models.Model):
 
 
 #--------Sample model-----------
+# Define choices for thhe 'sample_matrix' field.
+# The format is CHOICE = " database value", "human-readable or display name"
+class SampleMatrix(models.TextChoices):
+    GROUNDWATER = "GW", "Groundwater"
+    SOIL = "S", "Soil"
 
 class Sample(models.Model):
     """Represents a sample collected from a Thing"""
     sample_id = models.BigAutoField(primary_key=True)
     thing_id = models.ForeignKey(Thing, on_delete=models.CASCADE, related_name="samples", verbose_name="related thing")
+    sample_matrix - models.CharField(
+        max_length=2,
+        choices=SampleMatrix.choices,  # Use the choices defined in the SampleMatrix class
+        default=SampleMatrix.GROUNDWATER,  # Set a default value for the field.
+        verbose_name="type of sample"  # Human-readable label for user interfaces like forms and the admin panel.
+    )
     sample_date = models.DateTimeField()
     sample_notes = models.TextField(blank=True, null=True)
 
