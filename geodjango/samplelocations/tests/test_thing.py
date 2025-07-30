@@ -16,22 +16,17 @@ class TestThing(BaseTestClass):
         # Create Location records
         self.location1 = Location.objects.create(
             coordinate="POINT(10.0 10.0 100.0)",
-            # date_created="2023-10-01T00:00:00Z",
 
         )
         self.location2 = Location.objects.create(
             coordinate="POINT(20.0 20.0 200.0)",
-            # date_created="2023-10-01T00:00:00Z",
         )
 
         # Create Thing records
         self.well_thing = Thing.objects.create(
             name="Test Well",
-            description="A well for testing",
             thing_type="W",
             release_status=True,
-            # date_created="2023-10-01T00:00:00Z",
-            # location_id=self.location1.location_id,
             well_depth_ft=100.0,
             hole_depth_ft=120.0,
             casing_diameter_ft=10.0,
@@ -41,10 +36,8 @@ class TestThing(BaseTestClass):
         )
         self.spring_thing = Thing.objects.create(
             name="Test Spring",
-            description="A spring for testing",
             thing_type="S",
             release_status=True,
-            # date_created="2023-10-01T00:00:00Z",
             spring_type="thermal",
         )
 
@@ -97,7 +90,6 @@ class TestThing(BaseTestClass):
                         "properties": {
                             "thing_id": self.well_thing.thing_id,
                             "name": self.well_thing.name,
-                            "description": self.well_thing.description,
                             "thing_type": "Well",
                             "release_status": self.well_thing.release_status,
                             "date_created": self.well_thing.date_created.isoformat(),
@@ -118,7 +110,6 @@ class TestThing(BaseTestClass):
                         "properties": {
                             "thing_id": self.spring_thing.thing_id,
                             "name": self.spring_thing.name,
-                            "description": self.spring_thing.description,
                             "thing_type": "Spring",
                             "release_status": self.spring_thing.release_status,
                             "date_created": self.spring_thing.date_created.isoformat(),
@@ -151,7 +142,6 @@ class TestThing(BaseTestClass):
                         "properties": {
                             "thing_id": self.well_thing.thing_id,
                             "name": self.well_thing.name,
-                            "description": self.well_thing.description,
                             "thing_type": "Well",
                             "release_status": self.well_thing.release_status,
                             "date_created": self.well_thing.date_created.isoformat(),
