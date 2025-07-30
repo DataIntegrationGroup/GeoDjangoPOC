@@ -3,7 +3,7 @@ from unfold.admin import ModelAdmin
 from django import forms
 from django.contrib.gis.admin import GISModelAdmin
 from django.contrib.gis.geos import Point
-from samplelocations.models import Location, Thing, WellThing, SpringThing, Location_Thing_Junction, Sensor, Datastream, Observation, \
+from samplelocations.models import Location, Thing, Location_Thing_Junction, Sensor, Datastream, Observation, \
     GroundwaterLevelObservation, Sample
 
 class LocationForm(forms.ModelForm):
