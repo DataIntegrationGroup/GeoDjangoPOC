@@ -31,7 +31,6 @@ class BaseProperties(Schema):
     thing_type: str
     release_status: bool
     date_created: str
-    description: str | None = None
 
 
 class WellProperties(BaseProperties):

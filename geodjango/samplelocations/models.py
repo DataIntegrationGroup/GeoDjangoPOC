@@ -54,7 +54,6 @@ class Thing(models.Model):
         )
     release_status = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
-    description = models.TextField(blank=True, null=True, help_text="A description of the thing")
     # The 'location' field sets up the M:M relationship and specifies
     # the 'Locoation_Thing_Juncation' as the intermediate table.
     location_id = models.ManyToManyField(
