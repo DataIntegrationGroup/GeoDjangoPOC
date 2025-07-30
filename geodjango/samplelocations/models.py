@@ -34,16 +34,15 @@ class Location(models.Model):
 
 
 #--------Thing model -----------
+# Define class-based choices for the 'thing_type' field.
+# This allows for a more structured way to define and use choices in Django models.
+# The format is CHOICE = " database value", "human-readable or display name"
+class ThingType(models.TextChoices):
+    WELL = "W", "Well"
+    SPRING = "S", "Spring"
 
 class Thing(models.Model):
     """A base model representing a generic monitoring station (Thing)"""
-
-    # Define class-based choices for the 'thing_type' field.
-    # This allows for a more structured way to define and use choices in Django models.
-    # The format is CHOICE = " database value", "human-readable or display name"
-    class ThingType(models.TextChoices):
-        WELL = "W", "Well"
-        SPRING = "S", "Spring"
 
     thing_id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
@@ -74,7 +73,7 @@ class Thing(models.Model):
 
     #Fields specific to a SPRING
     spring_type = models.CharField(max_length=255, blank=True, null=True) # e.g. "artesian", "subartesian", "thermal", etc.
-    description_spring = models.CharField(max_length=255, blank=True, null=True)
+
 
     def __str__(self):
         return f"Thing object is a {self.thing_type} with name {self.name}"
