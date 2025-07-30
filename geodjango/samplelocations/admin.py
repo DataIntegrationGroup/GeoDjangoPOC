@@ -3,7 +3,7 @@ from unfold.admin import ModelAdmin
 from django import forms
 from django.contrib.gis.admin import GISModelAdmin
 from django.contrib.gis.geos import Point
-from samplelocations.models import Location, Thing, WellThing, SpringThing, Location_Thing_Junction, Sensor, Datastream, Observation, \
+from samplelocations.models import Location, Thing, Location_Thing_Junction, Sensor, Datastream, Observation, \
     GroundwaterLevelObservation, Sample
 
 class LocationForm(forms.ModelForm):
@@ -29,14 +29,6 @@ class LocationAdmin(GISModelAdmin):
 class ThingAdmin(ModelAdmin):
     pass
 
-@admin.register(WellThing)
-class WellThingAdmin(ModelAdmin):
-    pass
-
-@admin.register(SpringThing)
-class SpringThingAdmin(ModelAdmin):
-    pass
-
 @admin.register(Location_Thing_Junction)
 class LocationThingJunctionAdmin(ModelAdmin):
     pass
@@ -60,6 +52,14 @@ class GroundwaterLevelObservationAdmin(ModelAdmin):
 @admin.register(Sample)
 class SampleAdmin(ModelAdmin):
     pass
+
+# @admin.register(WellThing)
+# class WellThingAdmin(ModelAdmin):
+#     pass
+
+# @admin.register(SpringThing)
+# class SpringThingAdmin(ModelAdmin):
+#     pass
 
 #admin.site.register(Lexicon)
 #admin.site.register(WellScreen)

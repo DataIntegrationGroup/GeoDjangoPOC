@@ -34,11 +34,24 @@ class Location(models.Model):
 
 
 #--------Thing model -----------
+# Define class-based choices for the 'thing_type' field.
+# This allows for a more structured way to define and use choices in Django models.
+# The format is CHOICE = " database value", "human-readable or display name"
+class ThingType(models.TextChoices):
+    WELL = "W", "Well"
+    SPRING = "S", "Spring"
 
 class Thing(models.Model):
     """A base model representing a generic monitoring station (Thing)"""
+
     thing_id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
+    thing_type = models.CharField(
+        max_length=2,
+        choices=ThingType.choices,  # Use the choices defined in the ThingType class.
+        default=ThingType.WELL,  # Set a default value for the field.
+        verbose_name="type of thing"  # Human-readable label for user interfaces like forms and admin panel.
+        )
     release_status = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
     # The 'location' field sets up the M:M relationship and specifies
@@ -50,8 +63,20 @@ class Thing(models.Model):
         verbose_name= "related location" # Human-readable label for user interfaces like forms and the admin panel.
     )
 
+    #Fields specific to a WELL
+    well_depth_ft = models.FloatField(blank=True, null=True, help_text="well depth feet below ground surface")
+    hole_depth_ft = models.FloatField(blank=True, null=True, help_text="hole depth feet below ground surface")
+    casing_diameter_ft = models.FloatField(blank=True, null=True, help_text="casing diameter in ft")
+    casing_depth_ft = models.FloatField(blank=True, null=True, help_text="casing depth feet below ground surface")
+    casing_description = models.CharField(max_length=50, blank=True, null=True)
+    construction_notes = models.TextField(blank=True, null=True)  # Use TextField over CharField for long-form text of variable length without a predefined limit.
+
+    #Fields specific to a SPRING
+    spring_type = models.CharField(max_length=255, blank=True, null=True) # e.g. "artesian", "subartesian", "thermal", etc.
+
+
     def __str__(self):
-        return f"Thing object with id {self.thing_id} and name {self.name}"
+        return f"Thing object is a {self.thing_type} with name {self.name}"
 
     class Meta:
         verbose_name = "Thing"
@@ -93,51 +118,6 @@ class Location_Thing_Junction(models.Model):
         db_table_comment = "Junction table linking Location and Thing models"
 
 
-#--------WellThing model. Inherits all fields from Thing model -----------
-
-class WellThing(Thing):
-    """ A specific type of monitoring station (Thing) representing a well."""
-    wellthing_id = models.BigAutoField(primary_key=True)
-    # This field creates the inheritance link from WellThing back to Thing.
-    # The name 'thing_ptr' is a conventional naming choice in Django for the parent link field,
-    thing_ptr= models.OneToOneField(
-        Thing,
-        on_delete=models.CASCADE,
-        parent_link = True,
-        related_name='wellthings',
-        verbose_name="related thing"
-    )
-    well_depth_ft = models.FloatField(blank=True, null=True, help_text="well depth feet below ground surface")
-    hole_depth_ft = models.FloatField(blank=True, null=True, help_text="hole depth feet below ground surface")
-    casing_diameter_ft = models.FloatField(blank=True, null=True, help_text="casing diameter in ft")
-    casing_depth_ft = models.FloatField(blank=True, null=True, help_text="casing depth feet below ground surface")
-    casing_description = models.CharField(max_length=50, blank=True, null=True)
-    construction_notes = models.TextField(blank=True, null=True) # Use TextField over CharField for long-form text of variable length without a predefined limit.
-
-    def __str__(self):
-        return f"{self.name} (Well)"
-
-
-#--------SpringThing model. Inherits all fields from Thing model -----------
-
-class SpringThing(Thing):
-    """ A specific type of monitoring station (Thing) representing a spring."""
-    springthing_id = models.BigAutoField(primary_key=True)
-    # This field creates the inheritance link from SpringThing back to Thing.
-    # The name 'thing_ptr' is a conventional naming choice in Django for the parent link field,
-    thing_ptr = models.OneToOneField(
-        Thing,
-        on_delete=models.CASCADE,
-        parent_link=True,
-        related_name='springthings',
-        verbose_name="related thing"
-    )
-    description = models.CharField(max_length=255, blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.name} (Spring)"
-
-
 #--------Sensor model-----------
 #TODO: add a 'name' field to this model.
 class Sensor(models.Model):
@@ -168,11 +148,22 @@ class Datastream(models.Model):
 
 
 #--------Sample model-----------
+# Define choices for thhe 'sample_matrix' field.
+# The format is CHOICE = " database value", "human-readable or display name"
+class SampleMatrix(models.TextChoices):
+    GROUNDWATER = "GW", "Groundwater"
+    SOIL = "S", "Soil"
 
 class Sample(models.Model):
     """Represents a sample collected from a Thing"""
     sample_id = models.BigAutoField(primary_key=True)
     thing_id = models.ForeignKey(Thing, on_delete=models.CASCADE, related_name="samples", verbose_name="related thing")
+    sample_matrix = models.CharField(
+        max_length=2,
+        choices=SampleMatrix.choices,  # Use the choices defined in the SampleMatrix class
+        default=SampleMatrix.GROUNDWATER,  # Set a default value for the field.
+        verbose_name="type of sample"  # Human-readable label for user interfaces like forms and the admin panel.
+    )
     sample_date = models.DateTimeField()
     sample_notes = models.TextField(blank=True, null=True)
 
