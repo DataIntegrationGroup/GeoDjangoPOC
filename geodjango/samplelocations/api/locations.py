@@ -3,7 +3,7 @@ from samplelocations.models import Location
 from samplelocations.schemas import LocationSchema, NotFoundSchema
 from typing import List
 
-router = Router()
+router = Router()   
 
 @router.get("")
 def get_locations(request) -> List[LocationSchema]:
